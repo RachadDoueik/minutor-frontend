@@ -45,11 +45,29 @@ const Navbar = () => {
               Contact
             </a>
           </li>
+          {/* Mobile CTA Buttons */}
+          {isMenuOpen && (
+            <>
+              <li className="navbar-item navbar-mobile-btn">
+                <button className="navbar-btn navbar-btn-signin navbar-mobile-signin">
+                  Sign In
+                </button>
+              </li>
+              <li className="navbar-item navbar-mobile-btn">
+                <button className="navbar-btn navbar-btn-primary navbar-mobile-primary">
+                  Get Started
+                </button>
+              </li>
+            </>
+          )}
         </ul>
 
-        {/* CTA Button */}
+        {/* CTA Buttons */}
         <div className="navbar-cta">
-          <button className="navbar-btn">
+          <button className="navbar-btn navbar-btn-signin">
+            Sign In
+          </button>
+          <button className="navbar-btn navbar-btn-primary">
             Get Started
           </button>
         </div>

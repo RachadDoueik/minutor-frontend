@@ -106,14 +106,15 @@
   width: 100%;
 }
 
-/* CTA Button */
+/* CTA Buttons */
 .navbar-cta {
   flex-shrink: 0;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
 }
 
 .navbar-btn {
-  background-color: #000000;
-  color: #ffffff;
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -124,7 +125,22 @@
   border: 2px solid #000000;
 }
 
-.navbar-btn:hover {
+.navbar-btn-signin {
+  background-color: transparent;
+  color: #000000;
+}
+
+.navbar-btn-signin:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-1px);
+}
+
+.navbar-btn-primary {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.navbar-btn-primary:hover {
   background-color: #ffffff;
   color: #000000;
   transform: translateY(-1px);
@@ -205,11 +221,19 @@
     display: none;
   }
 
-  /* Show CTA button in mobile menu */
-  .navbar-menu.active::after {
-    content: '';
-    display: block;
+  .navbar-menu.active {
+    left: 0;
+    padding-bottom: 1rem;
+  }
+
+  .navbar-mobile-btn {
     margin-top: 1rem;
+  }
+
+  .navbar-mobile-signin,
+  .navbar-mobile-primary {
+    width: 200px;
+    margin: 0 auto;
   }
 
   .navbar-menu.active {
