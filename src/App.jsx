@@ -1,16 +1,34 @@
-import Navbar from './components/Navbar'
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
 import Home from './pages/Home';
+import Auth from './components/Auth';
 
-function App() {
+// Layout component to conditionally show navbar
+const Layout = ({ children }) => {
+  const location = useLocation();
+  const hideNavbar = location.pathname === '/auth';
 
   return (
     <>
-      <Navbar />
-      <main style={{ paddingTop: '70px' }}>
-        <Home/>
+      {!hideNavbar && <Navbar />}
+      <main style={{ paddingTop: hideNavbar ? '0' : '70px' }}>
+        {children}
       </main>
     </>
-  )
+  );
+};
+
+function App() {
+  return (
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Auth />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
 }
 
-export default App
+export default App;

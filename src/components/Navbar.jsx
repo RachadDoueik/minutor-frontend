@@ -1,12 +1,22 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../css/Navbar.css';
 import logo from '../assets/images/logo-white-bg.png';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleSignIn = () => {
+    navigate('/auth');
+  };
+
+  const handleGetStarted = () => {
+    navigate('/auth');
   };
 
   return (
@@ -14,47 +24,53 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-logo">
-          <a href="/" className="navbar-logo-link">
+          <Link to="/" className="navbar-logo-link">
             <div className="navbar-logo-icon">
               {/* Logo icon placeholder - you can replace this with your actual logo */}
               <img src={logo} alt="Minutor Logo" className="navbar-logo-image" />
             </div>
             <span className="navbar-logo-text">Minutor</span>
-          </a>
+          </Link>
         </div>
 
         {/* Desktop Navigation Links */}
         <ul className={`navbar-menu ${isMenuOpen ? 'active' : ''}`}>
           <li className="navbar-item">
-            <a href="/" className="navbar-link">
+            <Link to="/" className="navbar-link">
               Home
-            </a>
+            </Link>
           </li>
           <li className="navbar-item">
-            <a href="/about" className="navbar-link">
+            <Link to="/about" className="navbar-link">
               About
-            </a>
+            </Link>
           </li>
           <li className="navbar-item">
-            <a href="/features" className="navbar-link">
+            <Link to="/features" className="navbar-link">
               Features
-            </a>
+            </Link>
           </li>
           <li className="navbar-item">
-            <a href="/contact" className="navbar-link">
+            <Link to="/contact" className="navbar-link">
               Contact
-            </a>
+            </Link>
           </li>
           {/* Mobile CTA Buttons */}
           {isMenuOpen && (
             <>
               <li className="navbar-item navbar-mobile-btn">
-                <button className="navbar-btn navbar-btn-signin navbar-mobile-signin">
+                <button 
+                  className="navbar-btn navbar-btn-signin navbar-mobile-signin"
+                  onClick={handleSignIn}
+                >
                   Sign In
                 </button>
               </li>
               <li className="navbar-item navbar-mobile-btn">
-                <button className="navbar-btn navbar-btn-primary navbar-mobile-primary">
+                <button 
+                  className="navbar-btn navbar-btn-primary navbar-mobile-primary"
+                  onClick={handleGetStarted}
+                >
                   Get Started
                 </button>
               </li>
@@ -64,10 +80,16 @@ const Navbar = () => {
 
         {/* CTA Buttons */}
         <div className="navbar-cta">
-          <button className="navbar-btn navbar-btn-signin">
+          <button 
+            className="navbar-btn navbar-btn-signin"
+            onClick={handleSignIn}
+          >
             Sign In
           </button>
-          <button className="navbar-btn navbar-btn-primary">
+          <button 
+            className="navbar-btn navbar-btn-primary"
+            onClick={handleGetStarted}
+          >
             Get Started
           </button>
         </div>

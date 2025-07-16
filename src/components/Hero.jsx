@@ -1,7 +1,19 @@
+import { useNavigate } from 'react-router-dom';
 import '../css/Hero.css';
 import heroImage from '../assets/images/hero-img.png';
 
 const Hero = () => {
+  const navigate = useNavigate();
+
+  const handleGetStarted = () => {
+    navigate('/auth');
+  };
+
+  const handleWatchDemo = () => {
+    // You can update this later to show a demo modal or navigate to a demo page
+    console.log('Watch demo clicked');
+  };
+
   return (
     <section className="hero">
       <div className="hero-container">
@@ -20,10 +32,16 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="hero-buttons">
-            <button className="hero-btn hero-btn-primary">
+            <button 
+              className="hero-btn hero-btn-primary"
+              onClick={handleGetStarted}
+            >
               Get Started Free
             </button>
-            <button className="hero-btn hero-btn-secondary">
+            <button 
+              className="hero-btn hero-btn-secondary"
+              onClick={handleWatchDemo}
+            >
               Watch Demo
             </button>
           </div>
