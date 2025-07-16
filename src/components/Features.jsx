@@ -23,7 +23,7 @@ const Features = () => {
             </div>
             <h3 className="feature-title">Smart Meeting Minutes</h3>
             <p className="feature-description">
-              Automatically capture and organize meeting minutes with AI-powered note-taking. 
+              Capture and organize meeting minutes with ease. 
               Never miss important details or action items again.
             </p>
           </div>
