@@ -1,58 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useState } from 'react';
 import '../css/Auth.css';
 import logo from '../assets/images/logo-white-bg.png';
 import authBg from '../assets/images/auth-bg.jpg';
 
 const Auth = () => {
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-  const mode = searchParams.get('mode');
-  
-  const [isLogin, setIsLogin] = useState(mode !== 'signup');
-  const [isAnimating, setIsAnimating] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: ''
+    rememberMe: false
   });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : value
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
-  };
-
-  const toggleAuthMode = () => {
-    setIsAnimating(true);
-    
-    // Start exit animation
-    setTimeout(() => {
-      setIsLogin(!isLogin);
-      // Reset form data when switching modes
-      setFormData({
-        email: '',
-        password: '',
-        confirmPassword: '',
-        firstName: '',
-        lastName: ''
-      });
-      
-      // End animation after content change
-      setTimeout(() => {
-        setIsAnimating(false);
-      }, 100);
-    }, 150);
+    // Handle sign in logic here
+    console.log('Sign in submitted:', formData);
   };
 
   return (
@@ -65,14 +34,11 @@ const Auth = () => {
               <img src={logo} alt="Minutor Logo" className="auth-logo-image" />
               <h1 className="auth-logo-text">Minutor</h1>
             </div>
-            <h2 className={`auth-branding-title ${isAnimating ? 'animating' : ''}`}>
-              {isLogin ? 'Welcome Back!' : 'Join Minutor Today'}
+            <h2 className="auth-branding-title">
+              Welcome Back!
             </h2>
-            <p className={`auth-branding-subtitle ${isAnimating ? 'animating' : ''}`}>
-              {isLogin 
-                ? 'Sign in to continue managing your meetings efficiently'
-                : 'Start organizing your meetings and boost your productivity'
-              }
+            <p className="auth-branding-subtitle">
+              Sign in to continue managing your meetings efficiently and collaborate with your team.
             </p>
           </div>
         </div>
@@ -81,53 +47,15 @@ const Auth = () => {
         <div className="auth-form-section">
           <div className="auth-form-container">
             <div className="auth-form-header">
-              <h2 className={`auth-form-title ${isAnimating ? 'animating' : ''}`}>
-                {isLogin ? 'Sign In' : 'Create Account'}
+              <h2 className="auth-form-title">
+                Sign In
               </h2>
-              <p className={`auth-form-subtitle ${isAnimating ? 'animating' : ''}`}>
-                {isLogin 
-                  ? 'Enter your credentials to access your account'
-                  : 'Fill in your details to get started'
-                }
+              <p className="auth-form-subtitle">
+                Enter your credentials to access your account
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="auth-form">
-              {!isLogin && (
-                <div className="auth-form-row">
-                  <div className="auth-form-group">
-                    <label htmlFor="firstName" className="auth-label">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      id="firstName"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className="auth-input"
-                      placeholder="Enter your first name"
-                      required={!isLogin}
-                    />
-                  </div>
-                  <div className="auth-form-group">
-                    <label htmlFor="lastName" className="auth-label">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className="auth-input"
-                      placeholder="Enter your last name"
-                      required={!isLogin}
-                    />
-                  </div>
-                </div>
-              )}
-
               <div className="auth-form-group">
                 <label htmlFor="email" className="auth-label">
                   Email Address
@@ -160,59 +88,29 @@ const Auth = () => {
                 />
               </div>
 
-              {!isLogin && (
-                <div className="auth-form-group">
-                  <label htmlFor="confirmPassword" className="auth-label">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
+              <div className="auth-form-options">
+                <label className="auth-checkbox">
+                  <input 
+                    type="checkbox" 
+                    name="rememberMe"
+                    checked={formData.rememberMe}
                     onChange={handleInputChange}
-                    className="auth-input"
-                    placeholder="Confirm your password"
-                    required={!isLogin}
                   />
-                </div>
-              )}
-
-              {isLogin && (
-                <div className="auth-form-options">
-                  <label className="auth-checkbox">
-                    <input type="checkbox" />
-                    <span className="auth-checkbox-text">Remember me</span>
-                  </label>
-                  <a href="#" className="auth-forgot-password">
-                    Forgot password?
-                  </a>
-                </div>
-              )}
+                  <span className="auth-checkbox-text">Remember me</span>
+                </label>
+                <a href="#" className="auth-forgot-password">
+                  Forgot password?
+                </a>
+              </div>
 
               <button type="submit" className="auth-submit-btn">
-                {isLogin ? 'Sign In' : 'Create Account'}
+                Sign In
               </button>
-
-              {!isLogin && (
-                <p className="auth-terms">
-                  By creating an account, you agree to our{' '}
-                  <a href="#" className="auth-link">Terms of Service</a> and{' '}
-                  <a href="#" className="auth-link">Privacy Policy</a>
-                </p>
-              )}
             </form>
 
-            <div className="auth-switch">
-              <p className="auth-switch-text">
-                {isLogin ? "Don't have an account?" : "Already have an account?"}
-                <button 
-                  type="button" 
-                  onClick={toggleAuthMode} 
-                  className="auth-switch-btn"
-                >
-                  {isLogin ? 'Sign Up' : 'Sign In'}
-                </button>
+            <div className="auth-footer">
+              <p className="auth-footer-text">
+                Need an account? Contact your administrator.
               </p>
             </div>
           </div>

@@ -5,8 +5,8 @@ import heroImage from '../assets/images/hero-img.png';
 const Hero = () => {
   const navigate = useNavigate();
 
-  const handleGetStarted = () => {
-    navigate('/auth?mode=signup');
+  const handleSignIn = () => {
+    navigate('/auth');
   };
 
   const handleWatchDemo = () => {
@@ -34,9 +34,9 @@ const Hero = () => {
           <div className="hero-buttons">
             <button 
               className="hero-btn hero-btn-primary"
-              onClick={handleGetStarted}
+              onClick={handleSignIn}
             >
-              Get Started Free
+              Sign In
             </button>
             <button 
               className="hero-btn hero-btn-secondary"

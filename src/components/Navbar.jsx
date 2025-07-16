@@ -15,10 +15,6 @@ const Navbar = () => {
     navigate('/auth');
   };
 
-  const handleGetStarted = () => {
-    navigate('/auth?mode=signup');
-  };
-
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -55,42 +51,26 @@ const Navbar = () => {
               Contact
             </Link>
           </li>
-          {/* Mobile CTA Buttons */}
+          {/* Mobile CTA Button */}
           {isMenuOpen && (
-            <>
-              <li className="navbar-item navbar-mobile-btn">
-                <button 
-                  className="navbar-btn navbar-btn-signin navbar-mobile-signin"
-                  onClick={handleSignIn}
-                >
-                  Sign In
-                </button>
-              </li>
-              <li className="navbar-item navbar-mobile-btn">
-                <button 
-                  className="navbar-btn navbar-btn-primary navbar-mobile-primary"
-                  onClick={handleGetStarted}
-                >
-                  Get Started
-                </button>
-              </li>
-            </>
+            <li className="navbar-item navbar-mobile-btn">
+              <button 
+                className="navbar-btn navbar-btn-primary navbar-mobile-signin"
+                onClick={handleSignIn}
+              >
+                Sign In
+              </button>
+            </li>
           )}
         </ul>
 
-        {/* CTA Buttons */}
+        {/* CTA Button */}
         <div className="navbar-cta">
           <button 
-            className="navbar-btn navbar-btn-signin"
+            className="navbar-btn navbar-btn-primary"
             onClick={handleSignIn}
           >
             Sign In
-          </button>
-          <button 
-            className="navbar-btn navbar-btn-primary"
-            onClick={handleGetStarted}
-          >
-            Get Started
           </button>
         </div>
 

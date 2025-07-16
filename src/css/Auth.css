@@ -419,6 +419,19 @@
   color: #333;
 }
 
+.auth-footer {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e1e5e9;
+}
+
+.auth-footer-text {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
   .auth-container {
