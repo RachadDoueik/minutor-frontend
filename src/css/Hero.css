@@ -151,6 +151,17 @@
   .hero-title {
     font-size: 3rem;
   }
+
+  .hero-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-btn {
+    flex: 1;
+    min-width: 160px;
+    max-width: 220px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -175,6 +186,7 @@
   .hero-buttons {
     flex-direction: column;
     align-items: center;
+    gap: 1rem;
   }
 
   .hero-btn {
