@@ -2,11 +2,12 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Auth from './components/Auth';
+import Admin from './pages/Admin';
 
 // Layout component to conditionally show navbar
 const Layout = ({ children }) => {
   const location = useLocation();
-  const hideNavbar = location.pathname === '/auth';
+  const hideNavbar = location.pathname === '/auth' || location.pathname === '/admin';
 
   return (
     <>
@@ -25,6 +26,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path='/admin' element={<Admin />} />
         </Routes>
       </Layout>
     </Router>

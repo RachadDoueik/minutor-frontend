@@ -1,0 +1,66 @@
+import { useState } from 'react';
+import '../../css/AdminSidebar.css';
+import logo from '../../assets/images/logo-white-bg.png';
+
+const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
+  const menuItems = [
+    { id: 'dashboard', icon: '📊', label: 'Dashboard' },
+    { id: 'users', icon: '👥', label: 'User Management' },
+    { id: 'meetings', icon: '📅', label: 'Meetings' },
+    { id: 'settings', icon: '⚙️', label: 'Settings' },
+  ];
+
+  return (
+    <div className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
+      {/* Logo Section */}
+      <div className="sidebar-header">
+        <div className="sidebar-logo">
+          <img src={logo} alt="Minutor" className="sidebar-logo-image" />
+          {!collapsed && <span className="sidebar-logo-text">Minutor Admin</span>}
+        </div>
+        <button 
+          className="sidebar-toggle"
+          onClick={() => setCollapsed(!collapsed)}
+        >
+          {collapsed ? '→' : '←'}
+        </button>
+      </div>
+
+      {/* Navigation Menu */}
+      <nav className="sidebar-nav">
+        <ul className="sidebar-menu">
+          {menuItems.map((item) => (
+            <li key={item.id} className="sidebar-menu-item">
+              <button
+                className={`sidebar-menu-button ${activeTab === item.id ? 'active' : ''}`}
+                onClick={() => setActiveTab(item.id)}
+                title={collapsed ? item.label : ''}
+              >
+                <span className="sidebar-menu-icon">{item.icon}</span>
+                {!collapsed && <span className="sidebar-menu-label">{item.label}</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* User Info */}
+      <div className="sidebar-footer">
+        <div className="sidebar-user">
+          <div className="sidebar-user-avatar">👤</div>
+          {!collapsed && (
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">Admin User</div>
+              <div className="sidebar-user-role">Administrator</div>
+            </div>
+          )}
+        </div>
+        <button className="sidebar-logout" title={collapsed ? 'Logout' : ''}>
+          {collapsed ? '🚪' : 'Logout'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default AdminSidebar;

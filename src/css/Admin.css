@@ -1,0 +1,49 @@
+/* Admin.css */
+.admin {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  font-family: 'Roboto', sans-serif;
+}
+
+.admin-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: margin-left 0.3s ease;
+}
+
+.admin-main.sidebar-collapsed {
+  margin-left: 0;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background-color: #fff;
+  margin: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .admin {
+    flex-direction: column;
+  }
+  
+  .admin-content {
+    margin: 1rem 0.5rem;
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-content {
+    margin: 0.5rem;
+    padding: 1rem 0.5rem;
+    border-radius: 4px;
+  }
+}
