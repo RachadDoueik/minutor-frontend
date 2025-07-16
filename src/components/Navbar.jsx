@@ -16,7 +16,7 @@ const Navbar = () => {
   };
 
   const handleGetStarted = () => {
-    navigate('/auth');
+    navigate('/auth?mode=signup');
   };
 
   return (

@@ -1,10 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../css/Auth.css';
 import logo from '../assets/images/logo-white-bg.png';
 import authBg from '../assets/images/auth-bg.jpg';
 
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const mode = searchParams.get('mode');
+  
+  const [isLogin, setIsLogin] = useState(mode !== 'signup');
   const [isAnimating, setIsAnimating] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
