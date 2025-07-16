@@ -1,4 +1,5 @@
 import Navbar from './components/Navbar'
+import Hero from './components/Hero'
 
 function App() {
 
@@ -6,7 +7,7 @@ function App() {
     <>
       <Navbar />
       <main style={{ paddingTop: '70px' }}>
-        <h1>Welcome to Minutor</h1>
+        <Hero />
       </main>
     </>
   )

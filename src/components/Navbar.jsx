@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import '../css/Navbar.css';
+import logo from '../assets/images/logo-white-bg.png';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -14,7 +15,11 @@ const Navbar = () => {
         {/* Logo */}
         <div className="navbar-logo">
           <a href="/" className="navbar-logo-link">
-            Minutor
+            <div className="navbar-logo-icon">
+              {/* Logo icon placeholder - you can replace this with your actual logo */}
+              <img src={logo} alt="Minutor Logo" className="navbar-logo-image" />
+            </div>
+            <span className="navbar-logo-text">Minutor</span>
           </a>
         </div>
 
