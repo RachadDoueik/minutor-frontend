@@ -1,5 +1,5 @@
 import Navbar from './components/Navbar'
-import Hero from './components/Hero'
+import Home from './pages/Home';
 
 function App() {
 
@@ -7,7 +7,7 @@ function App() {
     <>
       <Navbar />
       <main style={{ paddingTop: '70px' }}>
-        <Hero />
+        <Home/>
       </main>
     </>
   )

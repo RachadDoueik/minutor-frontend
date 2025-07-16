@@ -27,22 +27,6 @@ const Hero = () => {
               Watch Demo
             </button>
           </div>
-
-          {/* Feature Highlights */}
-          <div className="hero-features">
-            <div className="hero-feature">
-              <span className="hero-feature-icon">⚡</span>
-              <span className="hero-feature-text">Lightning Fast</span>
-            </div>
-            <div className="hero-feature">
-              <span className="hero-feature-icon">🤝</span>
-              <span className="hero-feature-text">Team Collaboration</span>
-            </div>
-            <div className="hero-feature">
-              <span className="hero-feature-icon">🔒</span>
-              <span className="hero-feature-text">Secure & Private</span>
-            </div>
-          </div>
         </div>
 
         {/* Hero Visual/Image */}
