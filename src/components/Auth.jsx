@@ -4,11 +4,14 @@ import logo from '../assets/images/logo-white-bg.png';
 import authBg from '../assets/images/auth-bg.jpg';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { setCredentials } from '../store/authSlice';
+import { setUser, setLoading } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Auth = () => {
+  
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -28,36 +31,49 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Start loading
+    dispatch(setLoading(true));
+    
     try {
       const response = await axios.post(`${apiUrl}/auth/login`, {
         email: formData.email,
         password: formData.password
       });
 
-      // Handle successful login, e.g., store token, redirect, etc.
-      // Store in Redux
+      // Handle successful login
       if (response.data.user && response.data.token) {
-        setCredentials({ user: response.data.user, token: response.data.token });
-      }
+        // Store in Redux using setUser
+        dispatch(setUser({ 
+          user: response.data.user, 
+          token: response.data.token 
+        }));
+        
+        //store in localStorage if rememberMe is checked
+        if (formData.rememberMe) {
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          localStorage.setItem('token', response.data.token);
+        } else {
+          sessionStorage.setItem('user', JSON.stringify(response.data.user));
+          sessionStorage.setItem('token', response.data.token);
+        }
+        
+        //show success message
+        toast.success('Login successful!');
 
-      //store in localStorage if rememberMe is checked
-      if (formData.rememberMe) {
-        localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('token', response.data.token);
-      }
-      else{
-        sessionStorage.setItem('user', JSON.stringify(response.data.user));
-        sessionStorage.setItem('token', response.data.token);
-      }
-      //show success message
-      toast.success('Login successful!');
-
-      if (response.data.user.is_admin == true) {
-        // Redirect to admin dashboard if user is an admin
-        navigate('/admin');
+        if (response.data.user.is_admin === true) {
+          // Redirect to admin dashboard if user is an admin
+          navigate('/admin');
+        } else {
+          // Redirect to home for regular users
+          navigate('/');
+        }
       }
 
     } catch (error) {
+      // Stop loading on error
+      dispatch(setLoading(false));
+      
       //show error message
       if (!error.response) {
         // Network error / server unreachable

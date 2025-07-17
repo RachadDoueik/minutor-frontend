@@ -28,14 +28,14 @@ const Admin = () => {
 
   return (
     <div className="admin">
-      <AdminSidebar 
+      <AdminSidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         collapsed={sidebarCollapsed}
         setCollapsed={setSidebarCollapsed}
       />
       <div className={`admin-main ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-        <AdminHeader 
+        <AdminHeader
           activeTab={activeTab}
           toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
         />

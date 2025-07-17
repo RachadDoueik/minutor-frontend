@@ -4,40 +4,31 @@ import '../../css/AdminSidebar.css';
 import logo from '../../assets/images/logo-white-bg.png';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
-import { use, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
 
-
-  useEffect(() => {
-    // Check if user is logged in
-    const user = localStorage.getItem('user') || sessionStorage.getItem('user');
-    if (!user) {
-      navigate('/auth'); // Redirect to auth page if not logged in
-      toast.error('Please log in to access the admin panel.');
-    }
-    if (user && JSON.parse(user).is_admin !== true) { 
-      toast.error('Access denied. Admins only.');
-      navigate('/');
-    }
-  }, [])
-
   const navigate = useNavigate();
 
+  const dispatch = useDispatch();
+
+
+  const user = useSelector((state) => state.auth.user);
+
   const handleLogout = async () => {
-  try {
-    await api.post('/auth/logout'); // token should be attached automatically
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('user');
-    sessionStorage.removeItem('token');
-    logout(); // Dispatch logout action to Redux store
-    toast.info('Logout successful!');
-    navigate('/'); // Redirect to login page
-  } catch (error) {
-    console.error('Logout error:', error);
-  }
-};
+    try {
+      await api.post('/auth/logout'); // token should be attached automatically
+      localStorage.removeItem('user');
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('token');
+      dispatch(logout()); // Dispatch logout action to Redux store
+      toast.info('Logout successful!');
+      navigate('/'); // Redirect to login page
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard' },
@@ -86,7 +77,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
           <div className="sidebar-user-avatar">👤</div>
           {!collapsed && (
             <div className="sidebar-user-info">
-              <div className="sidebar-user-name">Admin User</div>
+              <div className="sidebar-user-name">{user?.name || 'Admin'}</div>
               <div className="sidebar-user-role">Administrator</div>
             </div>
           )}
