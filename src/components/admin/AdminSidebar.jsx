@@ -4,8 +4,23 @@ import '../../css/AdminSidebar.css';
 import logo from '../../assets/images/logo-white-bg.png';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
+import { use, useEffect } from 'react';
 
 const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
+
+
+  useEffect(() => {
+    // Check if user is logged in
+    const user = localStorage.getItem('user') || sessionStorage.getItem('user');
+    if (!user) {
+      navigate('/auth'); // Redirect to auth page if not logged in
+      toast.error('Please log in to access the admin panel.');
+    }
+    if (user && JSON.parse(user).is_admin !== true) { 
+      toast.error('Access denied. Admins only.');
+      navigate('/');
+    }
+  }, [])
 
   const navigate = useNavigate();
 
