@@ -1,8 +1,29 @@
-import { useState } from 'react';
+import { logout } from '../../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 import '../../css/AdminSidebar.css';
 import logo from '../../assets/images/logo-white-bg.png';
+import api from '../../api/axios';
+import { toast } from 'react-toastify';
 
 const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
+
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+  try {
+    await api.post('/auth/logout'); // token should be attached automatically
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('token');
+    logout(); // Dispatch logout action to Redux store
+    toast.info('Logout successful!');
+    navigate('/'); // Redirect to login page
+  } catch (error) {
+    console.error('Logout error:', error);
+  }
+};
+
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard' },
     { id: 'users', icon: '👥', label: 'User Management' },
@@ -18,7 +39,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
           <img src={logo} alt="Minutor" className="sidebar-logo-image" />
           {!collapsed && <span className="sidebar-logo-text">Minutor Admin</span>}
         </div>
-        <button 
+        <button
           className="sidebar-toggle"
           onClick={() => setCollapsed(!collapsed)}
         >
@@ -55,7 +76,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
             </div>
           )}
         </div>
-        <button className="sidebar-logout" title={collapsed ? 'Logout' : ''}>
+        <button className="sidebar-logout" title={collapsed ? 'Logout' : ''} onClick={() => handleLogout()}>
           {collapsed ? '🚪' : 'Logout'}
         </button>
       </div>

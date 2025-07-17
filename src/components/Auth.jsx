@@ -2,8 +2,16 @@ import { useState } from 'react';
 import '../css/Auth.css';
 import logo from '../assets/images/logo-white-bg.png';
 import authBg from '../assets/images/auth-bg.jpg';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { setCredentials } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 const Auth = () => {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -18,11 +26,58 @@ const Auth = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign in logic here
-    console.log('Sign in submitted:', formData);
-  };
+    try {
+      const response = await axios.post(`${apiUrl}/auth/login`, {
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Handle successful login, e.g., store token, redirect, etc.
+      // Store in Redux
+      if (response.data.user && response.data.token) {
+        setCredentials({ user: response.data.user, token: response.data.token });
+      }
+
+      //store in localStorage if rememberMe is checked
+      if (formData.rememberMe) {
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        localStorage.setItem('token', response.data.token);
+      }
+      else{
+        sessionStorage.setItem('user', JSON.stringify(response.data.user));
+        sessionStorage.setItem('token', response.data.token);
+      }
+      //show success message
+      toast.success('Login successful!');
+
+      if (response.data.user.is_admin == true) {
+        // Redirect to admin dashboard if user is an admin
+        navigate('/admin');
+      }
+
+    } catch (error) {
+      //show error message
+      if (!error.response) {
+        // Network error / server unreachable
+        toast.error('Unable to reach server. Check your connection.');
+      } else if (error.response.status === 401) {
+        // Invalid credentials
+        toast.error('Invalid email or password.');
+      } else if (error.response.status === 422) {
+        // Validation error (e.g., missing email or password)
+        const errors = error.response.data.errors;
+        toast.error(`Validation error: ${JSON.stringify(errors)}`);
+      } else if (error.response.status >= 500) {
+        // Server error
+        toast.error('Server error. Please try again later.');
+      } else {
+        // Other errors
+        toast.error('An error occurred.');
+      }
+    }
+  }
 
   return (
     <div className="auth" style={{ backgroundImage: `url(${authBg})` }}>
@@ -90,8 +145,8 @@ const Auth = () => {
 
               <div className="auth-form-options">
                 <label className="auth-checkbox">
-                  <input 
-                    type="checkbox" 
+                  <input
+                    type="checkbox"
                     name="rememberMe"
                     checked={formData.rememberMe}
                     onChange={handleInputChange}

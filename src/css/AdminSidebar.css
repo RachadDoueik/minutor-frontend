@@ -1,7 +1,7 @@
 /* AdminSidebar.css */
 .admin-sidebar {
   width: 260px;
-  background-color: #1a1a1a;
+  background-color: black;
   color: #fff;
   transition: width 0.3s ease;
   position: relative;
@@ -193,7 +193,7 @@
 }
 
 .sidebar-logout {
-  background: none;
+  background: red;
   border: none;
   color: #ccc;
   cursor: pointer;

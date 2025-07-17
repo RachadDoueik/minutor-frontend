@@ -3,6 +3,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Auth from './components/Auth';
 import Admin from './pages/Admin';
+import { ToastContainer } from 'react-toastify';
+import { useDispatch } from 'react-redux';
 
 // Layout component to conditionally show navbar
 const Layout = ({ children }) => {
@@ -23,6 +25,7 @@ function App() {
   return (
     <Router>
       <Layout>
+         <ToastContainer/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/auth" element={<Auth />} />
