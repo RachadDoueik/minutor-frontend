@@ -1,14 +1,14 @@
-import { useState , useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useUserManagement } from '../../hooks/useUserManagement';
 import '../../css/UserManagement.css';
+import { toast } from 'react-toastify';
 import {
     setUsers,
     setLoading,
     setError,
     addUser,
     deleteUser,
-    toggleUserStatus,
     setSearchTerm,
     setFilterRole
 } from '../../store/userManagementSlice';
@@ -20,7 +20,15 @@ const UserManagement = () => {
     const dispatch = useDispatch();
 
     // Custom hook to manage user data
-    const { users , filteredUsers, isLoading, searchTerm, filterRole } = useUserManagement();
+    const { users, filteredUsers, isLoading, searchTerm, filterRole } = useUserManagement();
+
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [newUser, setNewUser] = useState({
+        name: '',
+        email: '',
+        is_admin: false,
+        password: ''
+    });
 
     //function to fetch users from API
     const fetchUsers = async () => {
@@ -35,16 +43,27 @@ const UserManagement = () => {
             dispatch(setError('Failed to fetch users')); // Dispatch error action
         }
     }
-            
 
 
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [newUser, setNewUser] = useState({
-        name: '',
-        email: '',
-        role: 'User',
-        password: ''
-    });
+
+    // Function to generate a unique password based on username
+    const generatePassword = (username) => {
+        if (!username) return '';
+
+        // Simple hash-like function for password generation
+        let hash = 0;
+        for (let i = 0; i < username.length; i++) {
+            const char = username.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+
+        // Make it positive and add some complexity
+        const positiveHash = Math.abs(hash);
+        const uniqueNumber = (positiveHash % 9000) + 1000; // 4-digit number between 1000-9999
+
+        return `${username.charAt(0).toUpperCase()}${username.slice(1)}${uniqueNumber}!`;
+    };
 
 
     // Load users on component mount
@@ -58,14 +77,42 @@ const UserManagement = () => {
         }
     };
 
-    const handleToggleStatus = (userId) => {
-        dispatch(toggleUserStatus(userId));
+    const handleAddUser = async (e) => {
+        e.preventDefault();
+        try {
+        dispatch(setLoading(true)); // Set loading state
+        const responnse = await api.post('/users', newUser);
+        if (responnse.status === 201) {
+            dispatch(addUser(newUser)); // Dispatch action to add user
+            toast.success('User added successfully!');
+            dispatch(addUser(newUser));
+            setShowAddModal(false);
+            // Reset form
+            setNewUser({
+                name: '',
+                email: '',
+                role: 'User',
+                password: ''
+            });
+        }
+    } catch (error) {
+        console.error('Failed to add user:', error);
+        dispatch(setError('Failed to add user')); // Dispatch error action
+        toast.error('Failed to add user. Please try again.');
+        setShowAddModal(false); // Close modal on error
+    } finally {
+        dispatch(setLoading(false)); // Reset loading state
+    }
     };
 
-    const handleAddUser = (e) => {
-        e.preventDefault();
-        dispatch(addUser(newUser));
-        setShowAddModal(false);
+    const handleOpenModal = () => {
+        setNewUser({
+            name: '',
+            email: '',
+            role: 'User',
+            password: ''
+        });
+        setShowAddModal(true);
     };
 
     return (
@@ -97,7 +144,7 @@ const UserManagement = () => {
 
                 <button
                     className="add-user-btn"
-                    onClick={() => setShowAddModal(true)}
+                    onClick={handleOpenModal}
                 >
                     <span>+</span> Add User
                 </button>
@@ -118,59 +165,59 @@ const UserManagement = () => {
                     </div>
                 ) : (
                     <table className="users-table">
-                    <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Last Login</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {filteredUsers.map(user => (
-                            <tr key={user.id}>
-                                <td>
-                                    <div className="user-info">
-                                        <div className="user-avatar">👤</div>
-                                        <span className="user-name">{user.name}</span>
-                                    </div>
-                                </td>
-                                <td>{user.email}</td>
-                                <td>
-                                    <span className="role-text">
-                                        {user.is_admin ? 'A' : 'U'}
-                                    </span>
-                                </td>
-                                <td>{user.lastLogin}</td>
-                                <td>
-                                    <div className="user-actions">
-                                        <button
-                                            className="action-btn edit"
-                                            title="Edit User"
-                                        >
-                                            ✏️
-                                        </button>
-                                        <button
-                                            className="action-btn toggle"
-                                            title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
-                                            onClick={() => handleToggleStatus(user.id)}
-                                        >
-                                            {user.status === 'Active' ? '🔒' : '🔓'}
-                                        </button>
-                                        <button
-                                            className="action-btn delete"
-                                            title="Delete User"
-                                            onClick={() => handleDeleteUser(user.id)}
-                                        >
-                                            🗑️
-                                        </button>
-                                    </div>
-                                </td>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Created At</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {filteredUsers.map(user => (
+                                <tr key={user.id}>
+                                    <td>
+                                        <div className="user-info">
+                                            <div className="user-avatar">👤</div>
+                                            <span className="user-name">{user.name}</span>
+                                        </div>
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <span className="role-text">
+                                            {user.is_admin ? 'A' : 'U'}
+                                        </span>
+                                    </td>
+                                    <td>{user.created_at}</td>
+                                    <td>
+                                        <div className="user-actions">
+                                            <button
+                                                className="action-btn edit"
+                                                title="Edit User"
+                                            >
+                                                ✏️
+                                            </button>
+                                            <button
+                                                className="action-btn toggle"
+                                                title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
+                                                onClick={() => handleToggleStatus(user.id)}
+                                            >
+                                                {user.status === 'Active' ? '🔒' : '🔓'}
+                                            </button>
+                                            <button
+                                                className="action-btn delete"
+                                                title="Delete User"
+                                                onClick={() => handleDeleteUser(user.id)}
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 )}
             </div>
 
@@ -200,20 +247,30 @@ const UserManagement = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Email Address</label>
-                                <input
-                                    type="email"
-                                    value={newUser.email}
-                                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                                    required
-                                />
+                                <label>Username</label>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <input
+                                        type="text"
+                                        value={newUser.email.replace('@minutor.com', '')}
+                                        onChange={(e) => {
+                                            const username = e.target.value;
+                                            const email = username + '@minutor.com';
+                                            const password = generatePassword(username);
+                                            setNewUser({ ...newUser, email, password });
+                                        }}
+                                        placeholder="Enter username"
+                                        required
+                                        style={{ flex: 1 }}
+                                    />
+                                    <span style={{ marginLeft: '8px', color: '#666', fontSize: '14px' }}>@minutor.com</span>
+                                </div>
                             </div>
 
                             <div className="form-group">
                                 <label>Role</label>
                                 <select
                                     value={newUser.role}
-                                    onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                                    onChange={(e) => setNewUser({ ...newUser, is_admin: e.target.value === 'Admin' ? true : false })}
                                 >
                                     <option value="User">User</option>
                                     <option value="Admin">Admin</option>
@@ -221,13 +278,16 @@ const UserManagement = () => {
                             </div>
 
                             <div className="form-group">
-                                <label>Temporary Password</label>
+                                <label>Auto-Generated Password</label>
                                 <input
-                                    type="password"
+                                    type="text"
                                     value={newUser.password}
-                                    onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                                    required
+                                    readOnly
+                                    style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
                                 />
+                                <small style={{ color: '#666', fontSize: '12px', marginTop: '4px', display: 'block' }}>
+                                    Unique password based on username (user should change on first login)
+                                </small>
                             </div>
 
                             <div className="modal-actions">
@@ -248,10 +308,6 @@ const UserManagement = () => {
                 <div className="stat-item">
                     <span className="stat-number">{users ? users.length : 0}</span>
                     <span className="stat-label">Total Users</span>
-                </div>
-                <div className="stat-item">
-                    <span className="stat-number">{users ? users.filter(u => u.status === 'Active').length : 0}</span>
-                    <span className="stat-label">Active Users</span>
                 </div>
                 <div className="stat-item">
                     <span className="stat-number">{users ? users.filter(u => u.is_admin).length : 0}</span>
