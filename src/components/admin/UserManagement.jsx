@@ -1,17 +1,44 @@
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useUserManagement } from '../../hooks/useUserManagement';
 import '../../css/UserManagement.css';
+import {
+    setUsers,
+    setLoading,
+    setError,
+    addUser,
+    deleteUser,
+    toggleUserStatus,
+    setSearchTerm,
+    setFilterRole
+} from '../../store/userManagementSlice';
+import api from '../../api/axios';
 
 const UserManagement = () => {
-    const [users, setUsers] = useState([
-        { id: 1, name: 'John Doe', email: 'john@company.com', role: 'Admin', status: 'Active', lastLogin: '2024-01-15' },
-        { id: 2, name: 'Jane Smith', email: 'jane@company.com', role: 'User', status: 'Active', lastLogin: '2024-01-14' },
-        { id: 3, name: 'Mike Johnson', email: 'mike@company.com', role: 'User', status: 'Inactive', lastLogin: '2024-01-10' },
-        { id: 5, name: 'Tom Brown', email: 'tom@company.com', role: 'User', status: 'Active', lastLogin: '2024-01-13' }
-    ]);
+
+    //define dispatch for Redux actions
+    const dispatch = useDispatch();
+
+    // Custom hook to manage user data
+    const { users , filteredUsers, isLoading, searchTerm, filterRole } = useUserManagement();
+
+    //function to fetch users from API
+    const fetchUsers = async () => {
+        dispatch(setLoading(true)); // Set loading state
+        try {
+            const response = await api.get('/users');
+            console.log('Fetched users:', response.data.data);
+            const fetchedUsers = Object.values(response.data.data);// Convert object to array
+            dispatch(setUsers(fetchedUsers)); // Dispatch action to set users
+        } catch (error) {
+            console.error('Failed to fetch users:', error);
+            dispatch(setError('Failed to fetch users')); // Dispatch error action
+        }
+    }
+            
+
 
     const [showAddModal, setShowAddModal] = useState(false);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [filterRole, setFilterRole] = useState('all');
     const [newUser, setNewUser] = useState({
         name: '',
         email: '',
@@ -19,38 +46,26 @@ const UserManagement = () => {
         password: ''
     });
 
-    const filteredUsers = users.filter(user => {
-        const matchesSearch = user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRole = filterRole === 'all' || user.role === filterRole;
-        return matchesSearch && matchesRole;
-    });
 
-    const handleAddUser = (e) => {
-        e.preventDefault();
-        const user = {
-            id: users.length + 1,
-            ...newUser,
-            status: 'Active',
-            lastLogin: 'Never'
-        };
-        setUsers([...users, user]);
-        setNewUser({ name: '', email: '', role: 'User', password: '' });
-        setShowAddModal(false);
-    };
+    // Load users on component mount
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     const handleDeleteUser = (userId) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
-            setUsers(users.filter(user => user.id !== userId));
+            dispatch(deleteUser(userId));
         }
     };
 
-    const toggleUserStatus = (userId) => {
-        setUsers(users.map(user =>
-            user.id === userId
-                ? { ...user, status: user.status === 'Active' ? 'Inactive' : 'Active' }
-                : user
-        ));
+    const handleToggleStatus = (userId) => {
+        dispatch(toggleUserStatus(userId));
+    };
+
+    const handleAddUser = (e) => {
+        e.preventDefault();
+        dispatch(addUser(newUser));
+        setShowAddModal(false);
     };
 
     return (
@@ -63,7 +78,7 @@ const UserManagement = () => {
                             type="text"
                             placeholder="Search users..."
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onChange={(e) => dispatch(setSearchTerm(e.target.value))}
                             className="search-input"
                         />
                         <span className="search-icon">🔍</span>
@@ -71,7 +86,7 @@ const UserManagement = () => {
 
                     <select
                         value={filterRole}
-                        onChange={(e) => setFilterRole(e.target.value)}
+                        onChange={(e) => dispatch(setFilterRole(e.target.value))}
                         className="filter-select"
                     >
                         <option value="all">All Roles</option>
@@ -90,13 +105,24 @@ const UserManagement = () => {
 
             {/* Users Table */}
             <div className="users-table-container">
-                <table className="users-table">
+                {isLoading ? (
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        height: '200px',
+                        fontSize: '16px',
+                        color: '#666'
+                    }}>
+                        Loading users...
+                    </div>
+                ) : (
+                    <table className="users-table">
                     <thead>
                         <tr>
                             <th>User</th>
                             <th>Email</th>
                             <th>Role</th>
-                            <th>Status</th>
                             <th>Last Login</th>
                             <th>Actions</th>
                         </tr>
@@ -113,12 +139,7 @@ const UserManagement = () => {
                                 <td>{user.email}</td>
                                 <td>
                                     <span className="role-text">
-                                        {user.role === 'Admin' ? 'A' : 'U'}
-                                    </span>
-                                </td>
-                                <td>
-                                    <span className={`status-badge ${user.status.toLowerCase()}`}>
-                                        {user.status}
+                                        {user.is_admin ? 'A' : 'U'}
                                     </span>
                                 </td>
                                 <td>{user.lastLogin}</td>
@@ -133,7 +154,7 @@ const UserManagement = () => {
                                         <button
                                             className="action-btn toggle"
                                             title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
-                                            onClick={() => toggleUserStatus(user.id)}
+                                            onClick={() => handleToggleStatus(user.id)}
                                         >
                                             {user.status === 'Active' ? '🔒' : '🔓'}
                                         </button>
@@ -150,6 +171,7 @@ const UserManagement = () => {
                         ))}
                     </tbody>
                 </table>
+                )}
             </div>
 
             {/* Add User Modal */}
@@ -224,15 +246,15 @@ const UserManagement = () => {
             {/* User Stats */}
             <div className="user-stats">
                 <div className="stat-item">
-                    <span className="stat-number">{users.length}</span>
+                    <span className="stat-number">{users ? users.length : 0}</span>
                     <span className="stat-label">Total Users</span>
                 </div>
                 <div className="stat-item">
-                    <span className="stat-number">{users.filter(u => u.status === 'Active').length}</span>
+                    <span className="stat-number">{users ? users.filter(u => u.status === 'Active').length : 0}</span>
                     <span className="stat-label">Active Users</span>
                 </div>
                 <div className="stat-item">
-                    <span className="stat-number">{users.filter(u => u.role === 'Admin').length}</span>
+                    <span className="stat-number">{users ? users.filter(u => u.is_admin).length : 0}</span>
                     <span className="stat-label">Administrators</span>
                 </div>
             </div>

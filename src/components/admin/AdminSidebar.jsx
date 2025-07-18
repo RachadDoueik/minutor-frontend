@@ -5,6 +5,7 @@ import logo from '../../assets/images/logo-white-bg.png';
 import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
+import { FaSignOutAlt } from 'react-icons/fa';
 
 const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
 
@@ -82,9 +83,13 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
             </div>
           )}
         </div>
-        <button className="sidebar-logout" title={collapsed ? 'Logout' : ''} onClick={() => handleLogout()}>
-          {collapsed ? '🚪' : 'Logout'}
-        </button>
+        {collapsed ? (
+            <FaSignOutAlt className="sidebar-logout-icon" onClick={handleLogout} title="Logout" />
+        ) : (
+          <button className="sidebar-logout-button" onClick={handleLogout}>
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );

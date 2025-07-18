@@ -7,6 +7,8 @@ import logo from '../assets/images/logo-white-bg.png';
 import api from '../api/axios';
 import { logout } from '../store/authSlice';
 import { setLoading } from '../store/authSlice';
+import { LuLogOut } from 'react-icons/lu';
+import { FaUserCircle } from 'react-icons/fa';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -158,7 +160,7 @@ const Navbar = () => {
                         className="profile-dropdown-item logout"
                         onClick={() => handleLogout()}
                       >
-                        ↗️ Logout
+                        <LuLogOut/> Logout
                       </button>
                     </div>
                   )}
@@ -210,7 +212,7 @@ const Navbar = () => {
                     className="profile-dropdown-item logout"
                     onClick={handleLogout}
                   >
-                    ↗️ Logout
+                   <LuLogOut/> Logout
                   </button>
                 </div>
               )}
