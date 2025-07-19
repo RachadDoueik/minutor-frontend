@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useUserManagement } from '../../hooks/useUserManagement';
 import '../../css/UserManagement.css';
 import { toast } from 'react-toastify';
@@ -22,8 +22,20 @@ const UserManagement = () => {
     //define dispatch for Redux actions
     const dispatch = useDispatch();
 
+    // Get current user from auth state
+    const currentUser = useSelector((state) => state.auth.user);
+
     // Custom hook to manage user data
-    const { users, filteredUsers, isLoading, searchTerm, filterRole } = useUserManagement();
+    const { users, filteredUsers: hookFilteredUsers, isLoading, searchTerm, filterRole } = useUserManagement();
+
+    // Filter out the currently logged-in admin from the users list
+    const filteredUsers = hookFilteredUsers.filter(user => {
+        // If current user is an admin, don't show them in the list
+        if (currentUser?.is_admin && user.id === currentUser.id) {
+            return false;
+        }
+        return true;
+    });
 
     const [showAddModal, setShowAddModal] = useState(false);
     const [newUser, setNewUser] = useState({
@@ -219,26 +231,46 @@ const UserManagement = () => {
                                     <td>{formatDateTime(user.created_at)}</td>
                                     <td>
                                         <div className="user-actions">
-                                            <button
-                                                className="action-btn edit"
-                                                title="Edit User"
-                                            >
-                                                <FiEdit />
-                                            </button>
-                                            <button
-                                                className="action-btn toggle"
-                                                title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
-                                                onClick={() => handleToggleStatus(user.id)}
-                                            >
-                                                {user.status === 'Active' ? <FiLock /> : <FiUnlock />}
-                                            </button>
-                                            <button
-                                                className="action-btn delete"
-                                                title="Delete User"
-                                                onClick={() => handleDeleteUser(user.id)}
-                                            >
-                                                <FiTrash2 />
-                                            </button>
+                                            {user.is_admin ? (
+                                                // For admin users, only show delete if it's the current user
+                                                currentUser?.id === user.id ? (
+                                                    <button
+                                                        className="action-btn delete"
+                                                        title="Delete Your Account"
+                                                        onClick={() => handleDeleteUser(user.id)}
+                                                    >
+                                                        <FiTrash2 />
+                                                    </button>
+                                                ) : (
+                                                    <span className="no-actions" title="Admin accounts can only be deleted by themselves">
+                                                        Admin Protected
+                                                    </span>
+                                                )
+                                            ) : (
+                                                // For regular users, show all actions
+                                                <>
+                                                    <button
+                                                        className="action-btn edit"
+                                                        title="Edit User"
+                                                    >
+                                                        <FiEdit />
+                                                    </button>
+                                                    <button
+                                                        className="action-btn toggle"
+                                                        title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
+                                                        onClick={() => handleToggleStatus(user.id)}
+                                                    >
+                                                        {user.status === 'Active' ? <FiLock /> : <FiUnlock />}
+                                                    </button>
+                                                    <button
+                                                        className="action-btn delete"
+                                                        title="Delete User"
+                                                        onClick={() => handleDeleteUser(user.id)}
+                                                    >
+                                                        <FiTrash2 />
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

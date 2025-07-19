@@ -213,6 +213,18 @@
   background-color: #ffebee;
 }
 
+.no-actions {
+  font-size: 0.8rem;
+  color: #999;
+  font-style: italic;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+  text-align: center;
+  white-space: nowrap;
+}
+
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
