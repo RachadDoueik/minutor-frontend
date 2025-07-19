@@ -14,6 +14,9 @@ import {
 } from '../../store/userManagementSlice';
 import api from '../../api/axios';
 
+// Import React Icons
+import { FiEdit, FiTrash2, FiLock, FiUnlock, FiSearch, FiPlus, FiUser } from 'react-icons/fi';
+
 const UserManagement = () => {
 
     //define dispatch for Redux actions
@@ -65,6 +68,26 @@ const UserManagement = () => {
         return `${username.charAt(0).toUpperCase()}${username.slice(1)}${uniqueNumber}!`;
     };
 
+    // Function to format created_at timestamp
+    const formatDateTime = (timestamp) => {
+        if (!timestamp) return 'N/A';
+        
+        try {
+            const date = new Date(timestamp);
+            // Format: DD/MM/YYYY HH:MM
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        } catch (error) {
+            console.error('Error formatting date:', error);
+            return 'Invalid Date';
+        }
+    };
+
 
     // Load users on component mount
     useEffect(() => {
@@ -77,6 +100,11 @@ const UserManagement = () => {
         }
     };
 
+    const handleToggleStatus = (userId) => {
+        // Add your toggle status logic here
+        console.log('Toggle status for user:', userId);
+    };
+
     const handleAddUser = async (e) => {
         e.preventDefault();
         try {
@@ -85,7 +113,6 @@ const UserManagement = () => {
         if (responnse.status === 201) {
             dispatch(addUser(newUser)); // Dispatch action to add user
             toast.success('User added successfully!');
-            dispatch(addUser(newUser));
             setShowAddModal(false);
             // Reset form
             setNewUser({
@@ -128,7 +155,7 @@ const UserManagement = () => {
                             onChange={(e) => dispatch(setSearchTerm(e.target.value))}
                             className="search-input"
                         />
-                        <span className="search-icon">🔍</span>
+                        <span className="search-icon"><FiSearch /></span>
                     </div>
 
                     <select
@@ -146,7 +173,7 @@ const UserManagement = () => {
                     className="add-user-btn"
                     onClick={handleOpenModal}
                 >
-                    <span>+</span> Add User
+                    <FiPlus /> Add User
                 </button>
             </div>
 
@@ -179,7 +206,7 @@ const UserManagement = () => {
                                 <tr key={user.id}>
                                     <td>
                                         <div className="user-info">
-                                            <div className="user-avatar">👤</div>
+                                            <div className="user-avatar"><FiUser /></div>
                                             <span className="user-name">{user.name}</span>
                                         </div>
                                     </td>
@@ -189,28 +216,28 @@ const UserManagement = () => {
                                             {user.is_admin ? 'A' : 'U'}
                                         </span>
                                     </td>
-                                    <td>{user.created_at}</td>
+                                    <td>{formatDateTime(user.created_at)}</td>
                                     <td>
                                         <div className="user-actions">
                                             <button
                                                 className="action-btn edit"
                                                 title="Edit User"
                                             >
-                                                ✏️
+                                                <FiEdit />
                                             </button>
                                             <button
                                                 className="action-btn toggle"
                                                 title={user.status === 'Active' ? 'Deactivate' : 'Activate'}
                                                 onClick={() => handleToggleStatus(user.id)}
                                             >
-                                                {user.status === 'Active' ? '🔒' : '🔓'}
+                                                {user.status === 'Active' ? <FiLock /> : <FiUnlock />}
                                             </button>
                                             <button
                                                 className="action-btn delete"
                                                 title="Delete User"
                                                 onClick={() => handleDeleteUser(user.id)}
                                             >
-                                                🗑️
+                                                <FiTrash2 />
                                             </button>
                                         </div>
                                     </td>

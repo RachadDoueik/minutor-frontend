@@ -9,6 +9,7 @@ import Auth from './components/Auth';
 import Admin from './pages/Admin';
 
 import { setUser, setLoading } from './store/authSlice';
+import NotFound from './pages/NotFound';
 
 const AUTH_PATHS = ['/auth', '/admin'];
 
@@ -109,6 +110,7 @@ function App() {
               <Admin />
             </RequireAdmin>
           } />
+          <Route path="*" element={<NotFound/>} />
         </Routes>
       </Layout>
     </Router>

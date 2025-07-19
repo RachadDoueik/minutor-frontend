@@ -1,0 +1,130 @@
+/* Not Found Page Styles */
+.not-found {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.not-found-container {
+  max-width: 600px;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.not-found-content {
+  text-align: center;
+  padding: 60px 40px;
+}
+
+/* 404 Number */
+.not-found-number {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.digit {
+  font-size: 120px;
+  font-weight: 900;
+  color: #000000;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Message Styles */
+.not-found-message {
+  margin-bottom: 40px;
+}
+
+.not-found-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #000000;
+  margin: 0 0 16px 0;
+}
+
+.not-found-subtitle {
+  font-size: 18px;
+  color: #666666;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Action Button */
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.not-found-btn {
+  padding: 16px 32px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  min-width: 180px;
+}
+
+.not-found-btn:hover {
+  background: #333333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.not-found-btn:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .not-found-content {
+    padding: 40px 24px;
+  }
+
+  .digit {
+    font-size: 80px;
+  }
+
+  .not-found-title {
+    font-size: 28px;
+  }
+
+  .not-found-subtitle {
+    font-size: 16px;
+  }
+
+  .not-found-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .not-found-container {
+    padding: 20px 16px;
+  }
+
+  .digit {
+    font-size: 60px;
+  }
+
+  .not-found-title {
+    font-size: 24px;
+  }
+
+  .not-found-number {
+    gap: 5px;
+  }
+}

@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { setUser, setLoading } from '../store/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 const Auth = () => {
@@ -20,6 +21,12 @@ const Auth = () => {
     password: '',
     rememberMe: false
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -147,16 +154,26 @@ const Auth = () => {
                 <label htmlFor="password" className="auth-label">
                   Password
                 </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="auth-input"
-                  placeholder="Enter your password"
-                  required
-                />
+                <div className="auth-password-container">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="auth-input auth-password-input"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="auth-password-toggle"
+                    onClick={togglePasswordVisibility}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                  </button>
+                </div>
               </div>
 
               <div className="auth-form-options">

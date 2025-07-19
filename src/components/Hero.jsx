@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import '../css/Hero.css';
 import heroImage from '../assets/images/hero-img.png';
 
 const Hero = () => {
   const navigate = useNavigate();
+  
+  // Get authentication status from Redux store
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
   const handleSignIn = () => {
     navigate('/auth');
@@ -32,18 +36,31 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="hero-buttons">
-            <button 
-              className="hero-btn hero-btn-primary"
-              onClick={handleSignIn}
-            >
-              Sign In
-            </button>
-            <button 
-              className="hero-btn hero-btn-secondary"
-              onClick={handleWatchDemo}
-            >
-              Watch Demo
-            </button>
+            {isAuthenticated ? (
+              // Show Demo button for authenticated users
+              <button 
+                className="hero-btn hero-btn-primary"
+                onClick={handleWatchDemo}
+              >
+                Watch Demo
+              </button>
+            ) : (
+              // Show Sign In and Demo buttons for non-authenticated users
+              <>
+                <button 
+                  className="hero-btn hero-btn-primary"
+                  onClick={handleSignIn}
+                >
+                  Sign In
+                </button>
+                <button 
+                  className="hero-btn hero-btn-secondary"
+                  onClick={handleWatchDemo}
+                >
+                  Watch Demo
+                </button>
+              </>
+            )}
           </div>
         </div>
 
