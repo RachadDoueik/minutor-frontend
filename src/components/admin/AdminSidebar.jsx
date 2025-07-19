@@ -6,8 +6,9 @@ import api from '../../api/axios';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { FaSignOutAlt } from 'react-icons/fa';
+import { AiOutlineHome } from 'react-icons/ai';
 
-const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
+const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed, mobileOpen, setMobileOpen }) => {
 
   const navigate = useNavigate();
 
@@ -31,6 +32,16 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
     }
   };
 
+  const handleGoHome = () => {
+    navigate('/');
+    setMobileOpen && setMobileOpen(false); // Close mobile menu when navigating
+  };
+
+  const handleMenuItemClick = (itemId) => {
+    setActiveTab(itemId);
+    setMobileOpen && setMobileOpen(false); // Close mobile menu when selecting item
+  };
+
   const menuItems = [
     { id: 'dashboard', icon: '📊', label: 'Dashboard' },
     { id: 'users', icon: '👥', label: 'User Management' },
@@ -39,7 +50,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
   ];
 
   return (
-    <div className={`admin-sidebar ${collapsed ? 'collapsed' : ''}`}>
+    <div className={`admin-sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
       {/* Logo Section */}
       <div className="sidebar-header">
         <div className="sidebar-logo">
@@ -61,7 +72,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
             <li key={item.id} className="sidebar-menu-item">
               <button
                 className={`sidebar-menu-button ${activeTab === item.id ? 'active' : ''}`}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => handleMenuItemClick(item.id)}
                 title={collapsed ? item.label : ''}
               >
                 <span className="sidebar-menu-icon">{item.icon}</span>
@@ -71,6 +82,22 @@ const AdminSidebar = ({ activeTab, setActiveTab, collapsed, setCollapsed }) => {
           ))}
         </ul>
       </nav>
+
+      {/* Home Button */}
+      <div className="sidebar-home">
+        {collapsed ? (
+          <AiOutlineHome 
+            className="sidebar-home-icon" 
+            onClick={handleGoHome} 
+            title="Go to Home" 
+          />
+        ) : (
+          <button className="sidebar-home-button" onClick={handleGoHome}>
+            <AiOutlineHome className="sidebar-home-icon" />
+            Go to Home Page
+          </button>
+        )}
+      </div>
 
       {/* User Info */}
       <div className="sidebar-footer">

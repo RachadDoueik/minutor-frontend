@@ -43,7 +43,7 @@ const Dashboard = () => {
             <div className="stat-label">Total Users</div>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">📅</div>
           <div className="stat-content">
@@ -51,7 +51,7 @@ const Dashboard = () => {
             <div className="stat-label">Total Meetings</div>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">🟢</div>
           <div className="stat-content">
@@ -59,7 +59,7 @@ const Dashboard = () => {
             <div className="stat-label">Active Meetings</div>
           </div>
         </div>
-        
+
         <div className="stat-card">
           <div className="stat-icon">✅</div>
           <div className="stat-content">
@@ -116,29 +116,6 @@ const Dashboard = () => {
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="dashboard-actions">
-        <h3>Quick Actions</h3>
-        <div className="action-buttons">
-          <button className="action-btn primary">
-            <span className="action-icon">👤</span>
-            Add User
-          </button>
-          <button className="action-btn secondary">
-            <span className="action-icon">📅</span>
-            Schedule Meeting
-          </button>
-          <button className="action-btn secondary">
-            <span className="action-icon">📊</span>
-            Generate Report
-          </button>
-          <button className="action-btn secondary">
-            <span className="action-icon">⚙️</span>
-            System Settings
-          </button>
         </div>
       </div>
     </div>

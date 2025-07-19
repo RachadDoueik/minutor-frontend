@@ -1,6 +1,7 @@
 import '../../css/AdminHeader.css';
+import { HiMenuAlt3 } from 'react-icons/hi';
 
-const AdminHeader = ({ activeTab, toggleSidebar }) => {
+const AdminHeader = ({ activeTab, toggleSidebar, toggleMobileMenu, mobileMenuOpen }) => {
     const getPageTitle = () => {
         switch (activeTab) {
             case 'dashboard':
@@ -34,6 +35,13 @@ const AdminHeader = ({ activeTab, toggleSidebar }) => {
     return (
         <header className="admin-header">
             <div className="admin-header-left">
+                <button 
+                    className="mobile-menu-toggle"
+                    onClick={toggleMobileMenu}
+                    aria-label="Toggle mobile menu"
+                >
+                    <HiMenuAlt3 />
+                </button>
                 <div className="admin-header-title">
                     <h1>{getPageTitle()}</h1>
                     <p>{getPageDescription()}</p>

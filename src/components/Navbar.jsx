@@ -9,6 +9,7 @@ import { logout } from '../store/authSlice';
 import { setLoading } from '../store/authSlice';
 import { LuLogOut } from 'react-icons/lu';
 import { FiUser } from 'react-icons/fi';
+import { MdDashboard } from 'react-icons/md';
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -121,6 +122,13 @@ const Navbar = () => {
     setIsMenuOpen(false); // Close mobile menu when accessing profile
   };
 
+  const handleDashboard = () => {
+    navigate('/admin');
+    setIsProfileDropdownOpen(false);
+    setIsMobileProfileDropdownOpen(false);
+    setIsMenuOpen(false); // Close mobile menu when accessing dashboard
+  };
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
@@ -184,6 +192,14 @@ const Navbar = () => {
                         </div>
                       </div>
                       <div className="profile-dropdown-divider"></div>
+                      {user?.is_admin && (
+                        <button
+                          className="profile-dropdown-item"
+                          onClick={handleDashboard}
+                        >
+                          <MdDashboard /> Dashboard
+                        </button>
+                      )}
                       <button
                         className="profile-dropdown-item"
                         onClick={handleProfile}
@@ -236,6 +252,14 @@ const Navbar = () => {
                     </div>
                   </div>
                   <div className="profile-dropdown-divider"></div>
+                  {user?.is_admin && (
+                    <button
+                      className="profile-dropdown-item"
+                      onClick={handleDashboard}
+                    >
+                      <MdDashboard /> Dashboard
+                    </button>
+                  )}
                   <button
                     className="profile-dropdown-item"
                     onClick={handleProfile}

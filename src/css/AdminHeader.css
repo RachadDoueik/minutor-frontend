@@ -192,6 +192,24 @@
   background-color: #fee;
 }
 
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1.5rem;
+  color: #333;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  margin-right: 1rem;
+}
+
+.mobile-menu-toggle:hover {
+  background-color: #f5f5f5;
+  color: #000;
+}
+
 .mobile-menu-btn {
   display: none;
   background: none;
@@ -206,6 +224,10 @@
 @media (max-width: 968px) {
   .admin-header {
     padding: 1rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
   }
   
   .mobile-menu-btn {

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import RequireAdmin from './components/guards/RequireAdmin';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -45,7 +45,7 @@ const useAuthInit = (dispatch, setIsAuthChecking) => {
               token,
               isAuthenticated: true,
             }));
-            console.log('✅ Authenticated as:', user.email);
+            toast.success(`Welcome back, ${user.name}!`);
           } else {
             throw new Error('Invalid user data');
           }
